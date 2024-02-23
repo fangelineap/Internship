@@ -1,0 +1,15 @@
+.previous-button {
+    background-color: red;
+    size: 24px;
+}
+
+.next-button {
+    height: 24px;
+}
+
+header {
+    display: flex;
+    height: 55px;
+    background-color: lightblue;
+    margin: 0px;
+}

@@ -1,0 +1,7 @@
+body {
+    margin: 0;
+    font-family: 'Open Sans';
+    font-size: 15px;
+    display: grid;
+    grid-template-columns: 445px 1fr;
+}
