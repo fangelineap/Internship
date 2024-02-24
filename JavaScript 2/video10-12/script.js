@@ -35,13 +35,16 @@ const close = document.querySelectorAll('.close');
 
 
 // DOM TRAVERSAL METHOD
-// const nama = document.querySelector('.nama');
-// console.log(nama.parentElement.parentElement);
-// /* node: whitespace dihitung sebagai node
-// element: whitespace tidak dihitung sebagai element, hanya yg ada tag */
-// console.log(nama.parentNode);
-// console.log(nama.nextElementSibling);
-// console.log(nama.nextSibling);
+const nama = document.querySelector('.nama');
+console.log(nama);
+/* node: whitespace dihitung sebagai node
+element: whitespace tidak dihitung sebagai element, hanya yg ada tag */
+console.log(nama.parentNode);
+console.log(nama.parentElement.parentElement);
+console.log(nama.nextElementSibling);
+console.log(nama.nextSibling);
+console.log(nama.previousSibling);
+console.log(nama.previousElementSibling);
 
 
 
