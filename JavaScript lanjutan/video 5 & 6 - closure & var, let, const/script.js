@@ -26,7 +26,6 @@ seolah-olah memiliki private method dan memiliki private var jika ada
 */
 
 function salam(waktu) {
-    // private anonymus method dan private var nama
     return function(nama) {
         console.log(`Halo ${nama}, selamat ${waktu}`);
     }
