@@ -19,7 +19,11 @@ apakah stack sedang kosong atau tidak, kalau kosong maka yg ada di queue
 dapat dimasukkan ke stack untuk dieksekusi
 
 Callback -> function yang dikirim sebagai parameter pada function lain untuk 
-dieksekusi*/
+dieksekusi
+
+kelemahan menggunakan callback adalah saat menggunakan terlalu banyak callback
+maka dapat mengakibatkan callback hell
+Cara yang lebih efektif dr jquery: fetch (dari js)*/
 
 // async
 console.log('satu');
@@ -87,7 +91,7 @@ getData('mahasiswa.json', (result) => {
 console.log('end');
 
 
-async - JQuery ($)
+// async - JQuery ($)
 console.log('start');
 $.ajax({
     url: 'mahasiswa.json',
