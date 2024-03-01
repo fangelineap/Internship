@@ -38,13 +38,17 @@
 const searchbtn = document.querySelector(".search-button");
 searchbtn.addEventListener("click", async function () {
     const key = document.querySelector(".input-keyword");
-
+    
     // akan berisi object yang berisi data
     // await untuk kasitau bahwa harus tunggu resolve dulu
-    const movies = await getMovies(key.value);
-    console.log(movies);
-
-    updateUI(movies);
+    try {
+        const movies = await getMovies(key.value);
+        console.log(movies);
+    
+        updateUI(movies);
+    } catch (error) {
+        alert(error);
+    }
 });
 
 // event binding -> agar elemen yang belum ada dapat diberikan event
@@ -70,8 +74,18 @@ function updateDetail(detail) {
 
 function getMovies(key) {
     return fetch("http://www.omdbapi.com/?apikey=769bff8&s=" + key)
-        .then((res) => res.json())
-        .then((res) => res.Search);
+        .then((res) => {
+            if(!res.ok) {
+                throw new Error(res.statusText);
+            }
+            return res.json();
+        })
+        .then((res) => {
+            if(res.Response === "False") {
+                throw new Error(res.Error);
+            }
+            return res.Search;
+        });
 }
 
 function updateUI(movies) {
