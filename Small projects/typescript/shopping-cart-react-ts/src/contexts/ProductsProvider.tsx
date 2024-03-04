@@ -13,18 +13,18 @@ export type ProductType = {
 const initState: ProductType[] = [
     {
         "sku": "item0001",
-        "name": "Widget",
+        "name": "Sage Cotton Yarn",
         "price": 9.99
     },
     {
         "sku": "item0002",
-        "name": "Premium Widget",
-        "price": 19.99
+        "name": "Blue Cotton Yarn",
+        "price": 11.99
     },
     {
         "sku": "item0003",
-        "name": "Deluxe Widget",
-        "price": 29.99
+        "name": "Light Pink Cotton Yarn",
+        "price": 10.99
     }
 ]
 
@@ -32,11 +32,13 @@ export type UseProductsContextType = { products: ProductType[] };
 
 const initContextState: UseProductsContextType = { products: [] };
 
+// buat context dengan parameter initial state (array of ProductType)
 const ProductsContext = createContext<UseProductsContextType>(initContextState);
 
 type ChildrenType = { children?: ReactElement | ReactElement[] };
 
 export const ProductsProvider = ({ children }: ChildrenType): ReactElement => {
+    // karena tidak menggunakan fetch, maka seharusnya tidak usah pakai useState
     const [products, setProducts] = useState<ProductType[]>(initState)
 
     // kalau mau fetch productList dari json file

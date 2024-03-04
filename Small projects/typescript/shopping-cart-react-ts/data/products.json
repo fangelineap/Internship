@@ -2,18 +2,18 @@
     "products": [
         {
             "sku": "item0001",
-            "name": "Widget",
+            "name": "Sage Cotton Yarn",
             "price": 9.99
         },
         {
             "sku": "item0002",
-            "name": "Premium Widget",
-            "price": 19.99
+            "name": "Blue Cotton Yarn",
+            "price": 11.99
         },
         {
             "sku": "item0003",
-            "name": "Deluxe Widget",
-            "price": 29.99
+            "name": "Light Pink Cotton Yarn",
+            "price": 10.99
         }
     ]
 }

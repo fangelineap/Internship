@@ -1,5 +1,6 @@
 import { ReactElement, createContext, useMemo, useReducer } from "react";
 
+// tipe dari setiap item yang ada di cart
 export type CartItemType = {
     sku: string;
     name: string;
@@ -7,10 +8,13 @@ export type CartItemType = {
     qty: number;
 };
 
+// state dari cart yang berisi array of product (cart item)
 type CartStateType = { cart: CartItemType[] };
 
+// initial state
 const initCartState: CartStateType = { cart: [] };
 
+// aksi yang dapat dilakukan oleh components
 const REDUCER_ACTION_TYPE = {
     ADD: "ADD",
     REMOVE: "REMOVE",
@@ -20,6 +24,7 @@ const REDUCER_ACTION_TYPE = {
 
 export type ReducerActionType = typeof REDUCER_ACTION_TYPE;
 
+// aksi yang dapat dilakukan berdasarkan reducer action type, payload bs diisi product saat add, remove, atau set qty
 export type ReducerAction = {
     type: string;
     payload?: CartItemType;
@@ -27,6 +32,7 @@ export type ReducerAction = {
 
 const reducer = (state: CartStateType, action: ReducerAction): CartStateType => {
     switch (action.type) {
+        // menambah item pada cart saat belum ada atau sudah ada (dari product list page)
         case REDUCER_ACTION_TYPE.ADD: {
             if (!action.payload) {
                 throw new Error("action.payload missing in ADD action");
@@ -42,6 +48,7 @@ const reducer = (state: CartStateType, action: ReducerAction): CartStateType => 
 
             return { ...state, cart: [...filteredCart, { sku, name, price, qty }] };
         }
+        // menghapus item tertentu dari cart
         case REDUCER_ACTION_TYPE.REMOVE: {
             if (!action.payload) {
                 throw new Error("action.payload missing in REMOVE action");
@@ -53,6 +60,7 @@ const reducer = (state: CartStateType, action: ReducerAction): CartStateType => 
 
             return { ...state, cart: [...filteredCart] };
         }
+        // set quantity dari cart berdasarkan qty yg diberikan oleh user
         case REDUCER_ACTION_TYPE.QTY: {
             if (!action.payload) {
                 throw new Error("action.payload missing in QUANTITY action");
@@ -72,6 +80,7 @@ const reducer = (state: CartStateType, action: ReducerAction): CartStateType => 
 
             return { ...state, cart: [...filteredCart, updatedItem] };
         }
+        // clear cart items saat user submit cartnya
         case REDUCER_ACTION_TYPE.SUBMIT: {
             return { ...state, cart: [] };
         }
