@@ -39,8 +39,10 @@ export async function createMember(data: {
 		const memberResponse = await supabase
 		.from('member')
 		.insert(
-			{ name: data.name, 
-				id: createResponse.data.user?.id 
+			{ 
+				name: data.name, 
+				id: createResponse.data.user?.id,
+				email: data.email
 			}
 		);
 
@@ -63,8 +65,91 @@ export async function createMember(data: {
 	}
 }
 
-export async function updateMemberById(id: string) {
-    console.log("update member");
+// update basic info
+export async function updateMemberBasicById(id: string, data: {
+	name: string
+}) {
+    const supabase = await createSupbaseServerClient();
+	const updateBasicResponse = await supabase.from('member').update(data).eq('id',id);
+
+	revalidatePath('/dashboard/members');
+	return JSON.stringify(updateBasicResponse);
+}
+
+// update advanced info
+export async function updateMemberAdvancedById(
+	permissionId: string, 
+	userId: string,
+	data: {
+	role: "admin" | "user";
+	status: "active" | "resigned";
+}) {
+	const { data : userSession } = await readUserSession();
+	if(userSession.session?.user.user_metadata.role !== "admin") {
+		return JSON.stringify({
+			error: { message: "You have to be an admin to update this" }
+		});
+	}
+
+	const supabaseAdmin = createSupabaseAdmin();
+
+	const updateResult = (await supabaseAdmin).auth.admin.updateUserById(
+		userId,
+		{ user_metadata: {
+			role: data.role
+		}}
+	);
+
+	if((await updateResult).error?.message) {
+		return JSON.stringify(updateResult)
+	} else {
+		const supabase = await createSupbaseServerClient();
+		const updateBasicResponse = await supabase
+		.from('permission')
+		.update(data)
+		.eq('id',permissionId);
+	
+		revalidatePath('/dashboard/members');
+		return JSON.stringify(updateBasicResponse);
+	}
+}
+
+// update account info
+export async function updateMemberAccountById(userId: string, data: {
+	email: string;
+    password?: string | undefined;
+    confirm?: string | undefined;
+}) {
+    const supabaseAdmin = await createSupabaseAdmin();
+
+	let updateObject :  
+	{
+		email: string;
+		password?: string | undefined;
+	} 
+	= { email: data.email };
+
+	if(data.password && data.password === data.confirm) {
+		updateObject['password'] = data.password;
+	}
+
+	const updateAccountResponse = await supabaseAdmin.auth.admin.updateUserById(
+		userId,
+		updateObject
+	);
+
+	if(updateAccountResponse.error?.message) {
+		return JSON.stringify(updateAccountResponse);
+	} else {
+		const supabase = await createSupbaseServerClient();
+		const updateBasicResponse = await supabase
+		.from('member')
+		.update({ email: data.email })
+		.eq('id',userId);
+
+		revalidatePath('/dashboard/members');
+		return JSON.stringify(updateAccountResponse);
+	}
 }
 
 export async function deleteMemberById(user_id: string) {

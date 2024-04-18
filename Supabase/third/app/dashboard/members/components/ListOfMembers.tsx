@@ -12,33 +12,6 @@ import DeleteMember from "./DeleteMember";
 export default async function ListOfMembers() {
 	const { data : permissions } = await readMembers();
 
-	// const members = [
-	// 	{
-	// 		name: "Sokheng",
-	// 		role: "admin",
-	// 		created_at: new Date().toDateString(),
-	// 		status: "active",
-	// 	},
-	// 	{
-	// 		name: "Sokheng",
-	// 		role: "user",
-	// 		created_at: new Date().toDateString(),
-	// 		status: "active",
-	// 	},
-	// 	{
-	// 		name: "Sokheng",
-	// 		role: "admin",
-	// 		created_at: new Date().toDateString(),
-	// 		status: "resigned",
-	// 	},
-	// 	{
-	// 		name: "Sokheng",
-	// 		role: "user",
-	// 		created_at: new Date().toDateString(),
-	// 		status: "active",
-	// 	},
-	// ];
-
 	const user = useUserStore.getState().user;
 	const isAdmin = user?.user_metadata.role === 'admin';
 	console.log(isAdmin);
@@ -89,7 +62,7 @@ export default async function ListOfMembers() {
 							{isAdmin && (
 								<DeleteMember user_id={permission.member.id} />
 							)}
-							<EditMember isAdmin={isAdmin} />
+							<EditMember isAdmin={isAdmin} permission={permission} />
 						</div>
 					</div>
 				);

@@ -7,6 +7,7 @@ export type IPermission = {
     member: {
         id: string,
         created_at: string,
-        name: string
+        name: string,
+        email: string
     }
 }
