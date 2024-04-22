@@ -8,7 +8,6 @@ import { useUserStore } from "@/lib/store/user";
 
 export default function Members() {
 	const user = useUserStore.getState().user;
-
 	const isAdmin = user?.user_metadata.role === 'admin';
 
 	return (

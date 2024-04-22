@@ -1,69 +1,52 @@
-"use client";
-
-import { useNavigation } from "@/hooks/useNavigation";
-import { supabase } from "@/lib/supabase";
 import React, { useState } from "react";
+import { redirect } from "next/navigation";
+import createSupabaseServerClient from "@/lib/supabase/server";
 
-const Reset = () => {
-    const { router } = useNavigation();
+const Reset = async ({ searchParams: { code } }: { searchParams: { code: string }}) => {
+    const confirmPassword = async (form: FormData) => {
+        "use server";
+        const supabase = await createSupabaseServerClient();
 
-    const [userData, setUserData] = useState<{
-        password: string;
-        confirmPassword: string;
-    }>({ password: "", confirmPassword: "" });
+        if (form.get("password") === form.get("confirmPassword")) {
+            if(code) {
+                const { error } = await supabase.auth.exchangeCodeForSession(code);
 
-    const confirmPassword = async () => {
-        const { password, confirmPassword } = userData;
+                if(error) return;
+            }
 
-        if(password !== confirmPassword) return alert(`Please double check your passwords`);
+            const { data, error } = await supabase.auth.updateUser({
+                 password: form.get('password')?.toString(),
+            });
 
-        const { data, error } = await supabase
-        .auth
-        .updateUser({
-            password: userData.password,
-        });
-
-        if(data) router.push('/');
-        if(error) console.log(error);
-    }
-
-    const handleChange = (e: any) => {
-        const { name, value } = e.target;
-        setUserData((prev: any) => ({
-            ...prev,
-            [name]: value,
-        }));
+            if (data) {
+                console.log("dataaa", data);
+                redirect("/");
+            }
+            if (error) console.log(error);
+        } else {
+            return alert("Your passwords does not match");
+        }
     };
 
     return (
-        <div className="container mx-auto w-[400px] grid gap-4">
-            <div className="grid">
-                <label>Enter your new password</label>
-                <input 
-                    type="password" 
-                    name="password" 
-                    value={userData?.password} 
-                    onChange={handleChange}
-                    className="text-black"
-                />
-            </div>
-            <div className="grid">
-                <label>Confirm your new password</label>
-                <input
-                    type="password"
-                    name="confirmPassword"
-                    value={userData?.confirmPassword}
-                    onChange={handleChange}
-                    className="text-black"
-                />
-            </div>
+        <form action={confirmPassword}>
+            <div className="container mx-auto w-[400px] grid gap-4">
+                <div className="grid">
+                    <label>Enter your new password</label>
+                    <input type="password" name="password" className="text-black" />
+                </div>
+                <div className="grid">
+                    <label>Confirm your new password</label>
+                    <input type="password" name="confirmPassword" className="text-black" />
+                </div>
 
-            <div>
-                <button onClick={confirmPassword} className="px-4 py-2 bg-blue-500 rounded cursor-pointer">
-                    Confirm
-                </button>
+                <div>
+                    <button type="submit" className="px-4 py-2 bg-blue-500 rounded cursor-pointer">
+                        Confirm
+                    </button>
+                </div>
             </div>
-        </div>
+        </form>
     );
 };
 

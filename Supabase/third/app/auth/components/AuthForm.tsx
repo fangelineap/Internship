@@ -112,7 +112,7 @@ export default function AuthForm() {
 						Login{" "}
 						<AiOutlineLoading3Quarters
 							className={cn("animate-spin", {
-								hidden: true,
+								hidden: !isPending,
 							})}
 						/>
 					</Button>
